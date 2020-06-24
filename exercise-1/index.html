@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title>Exercise 1</title>
+        <script src="https://unpkg.com/vue/dist/vue.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                new Vue({
+                    el: "#exercise", 
+                    data: {
+                        name: 'Dan', 
+                        age: 25, 
+                        profilePicture: 'https://pbs.twimg.com/profile_images/1102480719388049409/LF11-lH8_400x400.jpg'
+                    }, 
+                    methods: {
+                        updateName(e) {
+                            this.name = e.target.value;
+                        }
+                    }
+                })
+            });
+        </script>
+    </head>
+    <body>
+        <div id="exercise">
+           <!-- 1) Fill the <p> below with your Name and Age - using Interpolation -->
+            <p>VueJS is pretty cool - {{ name }} ({{ age }})</p>
+            <!-- 2) Output your age, multiplied by 3 -->
+            <p>{{ age * 3}}</p>
+            <!-- 3) Call a function to output a random float between 0 and 1 (Math.random()) -->
+            <p> {{ Math.random() }}</p>
+            <!-- 4) Search any image on Google and output it here by binding the "src" attribute -->
+            <div>
+                <img style="width:100px;height:100px" :src="profilePicture">
+            </div>
+            <!-- 5) Pre-Populate this input with your name (set the "value" attribute) -->
+            <div>
+                <input type="text" :value="name" @input="updateName"/>
+            </div>
+        </div>
+    </body>
+</html>
