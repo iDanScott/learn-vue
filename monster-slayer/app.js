@@ -6,14 +6,14 @@
                 playerHealth: 100, 
                 monsterHealth: 100, 
                 gameInProgress: false, 
-                log: []
+                logs: []
             }, 
             methods: {
                 newGame() {
                     this.playerHealth = 100;
                     this.monsterHealth = 100;
                     this.gameInProgress = true;
-                    this.log = [];
+                    this.logs = [];
                 }, 
                 attack() {
                     this.handleDamage(
@@ -28,33 +28,63 @@
                     );
                 }, 
                 heal() {
-                    this.handleDamage(
-                        0, 
-                        this.random(3, 8)
-                    );
-                    this.playerHealth += this.random(5, 15);
-                    
-                    if (this.playerHealth >= 100) {
-                        this.playerHealth = 100;
-                    }
+                    var heal = this.random(5, 15);
+                    var monsterDamage = this.random(3, 8);
+                    this.playerHealth -= monsterDamage;
+                    this.playerHealth += heal;
+                    this.createLog(`You heal for ${heal}`, "player");
+                    this.createLog(`The monster attacks you for ${monsterDamage}`, "monster");
+                    this.checkHealth();
                 },
                 handleDamage(playerDamage, monsterDamage) {
                     this.playerHealth -= monsterDamage;
                     this.monsterHealth -= playerDamage;
-                    
-                    if (this.playerHealth < 0) {
+                    this.createLog(`You attack the monster for ${playerDamage}`, "player");
+                    this.createLog(`The monster attacks you for ${monsterDamage}`, "monster");
+                    this.checkHealth();
+                },
+                checkHealth() {
+                    if (this.playerHealth <= 0) {
                         this.playerHealth = 0;
+                        this.gameOver('lost');
+                    }
+                    
+                    if (this.playerHealth >= 100) {
+                        this.playerHealth = 100;
                     }
 
-                    if (this.monsterHealth < 0) {
+                    if (this.monsterHealth <= 0) {
                         this.monsterHealth = 0;
+                        this.gameOver('won');
                     }
+                },
+                createLog(message, source) {
+                  this.logs.push({
+                      message: message, 
+                      source: source,
+                  })  
                 },
                 giveUp() { 
                     this.gameInProgress = false;
                 }, 
                 random(min, max) {
                     return Math.trunc(Math.random() * max) + min;
+                },
+                gameOver(status) {
+                    var startNewGame = '';
+                    if (status == 'won') {
+                        startNewGame = prompt('You have defeated the monster, would you like to start a new game?', 'no');
+                    }
+                    else {
+                        startNewGame = prompt('You have been defeated by the monster, would you like to start a new game?', 'no');
+                    }
+
+                    if (startNewGame == 'no') {
+                        this.gameInProgress = false;
+                    }
+                    else {
+                        this.newGame();
+                    }
                 }
             },
             computed: {
